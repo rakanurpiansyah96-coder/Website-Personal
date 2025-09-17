@@ -70,11 +70,10 @@ function openModal(id) {
   const modal = document.getElementById(id);
   modal.style.display = "flex";
 
-  // reset slider ke slide pertama
-  const slides = modal.querySelector(".slides");
-  if (slides) {
+  // reset semua slider ke slide pertama
+  modal.querySelectorAll(".slides").forEach((slides) => {
     slides.style.transform = "translateX(0%)";
-  }
+  });
 }
 
 // Tutup modal jika klik tombol close
@@ -91,14 +90,18 @@ window.addEventListener("click", (e) => {
   }
 });
 
-// Slider logic per modal
-document.querySelectorAll(".modal").forEach((modal) => {
-  const slides = modal.querySelector(".slides");
-  const images = modal.querySelectorAll(".slides img");
+// =============================
+// Slider logic (per slider)
+// =============================
+document.querySelectorAll(".slider").forEach((slider) => {
+  const slides = slider.querySelector(".slides");
+  const images = slides ? slides.querySelectorAll("img") : [];
+  const nextBtn = slider.querySelector(".next");
+  const prevBtn = slider.querySelector(".prev");
   let index = 0;
 
   const showSlide = (i) => {
-    if (!slides) return;
+    if (!slides || images.length === 0) return;
     if (i >= images.length) index = 0;
     else if (i < 0) index = images.length - 1;
     else index = i;
@@ -106,17 +109,17 @@ document.querySelectorAll(".modal").forEach((modal) => {
     slides.style.transform = `translateX(${-index * 100}%)`;
   };
 
-  // panggil sekali untuk set awal
+  // set awal
   showSlide(0);
 
-  if (modal.querySelector(".next")) {
-    modal.querySelector(".next").addEventListener("click", () => {
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => {
       showSlide(index + 1);
     });
   }
 
-  if (modal.querySelector(".prev")) {
-    modal.querySelector(".prev").addEventListener("click", () => {
+  if (prevBtn) {
+    prevBtn.addEventListener("click", () => {
       showSlide(index - 1);
     });
   }
